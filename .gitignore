@@ -13,5 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
-app/kotlin+java/com/example/weatherapp/Secrets.kt
-
+/app/src/main/java/com/example/weatherapp/Secrets.kt
