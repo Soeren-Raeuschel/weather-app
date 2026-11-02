@@ -1,10 +1,10 @@
 package com.example.weatherapp.data.remote.api
 
-class WeatherResponse(
+data class WeatherResponse(
     val name: String,
     val main: Main,
     val wind: Wind,
-    val weather: List<WeatherDescription>
+    val weather: List<WeatherDescription>,
 )
 
 data class Wind(
