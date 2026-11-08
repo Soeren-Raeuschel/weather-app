@@ -1,8 +1,10 @@
 package com.example.weatherapp.ui.navbar
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,7 +16,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 @Composable
 fun AppBottomBar(
     navController: NavHostController,
-    containerColor: Color = Color.Black
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -33,7 +36,14 @@ fun AppBottomBar(
                     }
                 },
                 icon = { Icon(item.icon, contentDescription = null) },
-                label = { Text(item.label) }
+                label = { Text(item.label) },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedTextColor = Color.White,
+                    unselectedTextColor = Color.White,
+
+                    selectedIconColor = Color.White,
+                    unselectedIconColor = Color.White
+                )
             )
         }
     }

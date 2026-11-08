@@ -3,6 +3,7 @@ package com.example.weatherapp.di
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.weatherapp.data.local.FavoriteDao
 import com.example.weatherapp.data.local.WeatherDao
 import com.example.weatherapp.data.remote.WeatherApi
 import dagger.Module
@@ -44,11 +45,8 @@ object DatabaseModule{
     fun provideAppDatabase(
         @ApplicationContext context: Context
     ): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "weather_cache"
-        ).build()
+        return Room.databaseBuilder(context, AppDatabase::class.java, "weather_cache")
+            .build()
     }
 
     @Provides
@@ -56,4 +54,8 @@ object DatabaseModule{
     fun provideWeatherDao(database: AppDatabase): WeatherDao{
         return database.weatherDao()
     }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDao(database: AppDatabase): FavoriteDao = database.favoriteDao()
 }

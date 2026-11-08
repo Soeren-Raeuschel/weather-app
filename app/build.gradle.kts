@@ -83,4 +83,12 @@ dependencies {
     implementation("androidx.room:room-ktx:2.7.1")
     ksp("androidx.room:room-compiler:2.7.1")
 
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+
+    //Location auslesen
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 }
