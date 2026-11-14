@@ -18,6 +18,9 @@ class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository
 ) : ViewModel() {
 
+    // Der Flow aus dem DataStore wird zum StateFlow, damit Compose ihn beobachten kann
+    // initialValue = Standardwerte, bis der DataStore das erste Mal geantwortet hat
+
     val settings: StateFlow<UserSettings> = repository.settings
         .stateIn(
             scope = viewModelScope,
@@ -25,6 +28,7 @@ class SettingsViewModel @Inject constructor(
             initialValue = UserSettings()
         )
 
+    // Schreiben ist suspend, deshalb in einer Coroutine im viewModelScope
     fun onTemperatureUnitChange(unit: TemperatureUnit) {
         viewModelScope.launch { repository.setTemperatureUnit(unit) }
     }

@@ -1,4 +1,6 @@
-package com.example.weatherapp.data.remote.api
+package com.example.weatherapp.data.remote
+
+import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
     val name: String,
@@ -8,15 +10,17 @@ data class WeatherResponse(
 )
 
 data class Wind(
-    val speed: Double
+    val speed: Double,
+    val deg: Int
 )
 
 data class Main(
     val temp: Double,
+    @SerializedName("feels_like") val feelsLike: Double,
     val humidity: Int
 )
 
 data class WeatherDescription(
-    val icon:String,
+    val icon: String,
     val description: String
 )

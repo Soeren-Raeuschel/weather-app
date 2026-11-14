@@ -12,5 +12,9 @@ data class WeatherEntity(
     val speed: Double,
     val description: String,
     val icon: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val lat: Double = 0.0,
+    val lon: Double = 0.0,
+    val feelsLike: Double = 0.0,
+    val windDeg: Int = 0
 )

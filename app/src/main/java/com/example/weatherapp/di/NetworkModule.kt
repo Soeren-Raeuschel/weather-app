@@ -2,7 +2,9 @@ package com.example.weatherapp.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.weatherapp.data.local.AppDatabase
 import com.example.weatherapp.data.local.FavoriteDao
 import com.example.weatherapp.data.local.WeatherDao
 import com.example.weatherapp.data.remote.WeatherApi
@@ -11,14 +13,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.jvm.java
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    // Retrofit-Instanz mit der Basis-URL der OpenWeatherMap-API
+    // Gson wandelt das JSON der API automatisch in meine Kotlin-Datenklassen um
 
     @Provides
     @Singleton
@@ -28,6 +32,8 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+
+    // Retrofit generiert aus meinem WeatherApi-Interface die echte Implementierung
 
     @Provides
     @Singleton
@@ -39,7 +45,10 @@ object NetworkModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseModule{
+object DatabaseModule {
+
+    // Baut die Room-Datenbank. Der Context wird von Hilt geliefert (@ApplicationContext)
+    // "weather_cache" ist der Dateiname der SQLite-Datenbank auf dem Gerät
     @Provides
     @Singleton
     fun provideAppDatabase(
@@ -49,9 +58,10 @@ object DatabaseModule{
             .build()
     }
 
+    // Die DAOs hole ich aus der Datenbank, damit die Repositories sie per Injection bekommen
     @Provides
     @Singleton
-    fun provideWeatherDao(database: AppDatabase): WeatherDao{
+    fun provideWeatherDao(database: AppDatabase): WeatherDao {
         return database.weatherDao()
     }
 

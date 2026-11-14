@@ -13,8 +13,6 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
-// Top-Level-Property, nur EINE Instanz pro Datei/App!
 private val Context.dataStore by preferencesDataStore(name = "settings")
 
 @Singleton
@@ -26,10 +24,18 @@ class SettingsRepository @Inject constructor(
         val UNIT_SYSTEM = stringPreferencesKey("unit_system")
     }
 
+    // Liest die gespeicherten Werte und baut daraus ein UserSettings-Objekt
+
     val settings: Flow<UserSettings> = context.dataStore.data
         .catch { e ->
+            //Wenn ein Ein-/Ausgabefehler auftritt, leere Preferences ausgeben
+            // anderen Fehler = erneut Fehler werfen
             if (e is IOException) emit(emptyPreferences()) else throw e
         }
+        // Wandelt die gespeicherten Preferences in ein UserSettings-Objekt um.
+        // Die gespeicherten Strings werden mithilfe von valueOf() in Enum-Werte umgewandelt.
+        // Falls noch keine Einstellung gespeichert wurde (null), werden die Standardwerte verwendet:
+        // Celsius für die Temperatureinheit und METRIC für das Einheitensystem.
         .map { prefs ->
             UserSettings(
                 temperatureUnit = prefs[Keys.TEMP_UNIT]
@@ -39,10 +45,14 @@ class SettingsRepository @Inject constructor(
             )
         }
 
+    // Speichert die ausgewählte Temperatureinheit dauerhaft im DataStore.
+    // Der Enum-Wert wird über .name als String gespeichert.
     suspend fun setTemperatureUnit(unit: TemperatureUnit) {
         context.dataStore.edit { it[Keys.TEMP_UNIT] = unit.name }
     }
 
+    // Speichert das ausgewählte Einheitensystem dauerhaft im DataStore.
+    // Auch hier wird der Enum-Wert über .name als String gespeichert.
     suspend fun setUnitSystem(system: UnitSystem) {
         context.dataStore.edit { it[Keys.UNIT_SYSTEM] = system.name }
     }

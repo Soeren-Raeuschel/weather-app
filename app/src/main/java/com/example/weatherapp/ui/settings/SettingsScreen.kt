@@ -23,10 +23,12 @@ import com.example.weatherapp.data.settings.UnitSystem
 
 @Composable
 fun SettingsScreen(viewModel: SettingsViewModel = hiltViewModel()) {
+    // collectAsStateWithLifecycle: sammelt den Flow nur, solange der Screen sichtbar ist
     val settings by viewModel.settings.collectAsStateWithLifecycle()
 
     Column(Modifier.padding(16.dp)) {
         Text("Temperatur", style = MaterialTheme.typography.titleMedium)
+        // Pro Enum-Wert eine Zeile; entries liefert alle Werte (CELSIUS, FAHRENHEIT, KELVIN)
         TemperatureUnit.entries.forEach { unit ->
             SettingsRadioRow(
                 label = when (unit) {
@@ -71,6 +73,7 @@ private fun SettingsRadioRow(
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // onClick = null, weil der Klick schon von der Row behandelt wird
         RadioButton(selected = selected, onClick = null)
         Text(label, modifier = Modifier.padding(start = 8.dp))
     }

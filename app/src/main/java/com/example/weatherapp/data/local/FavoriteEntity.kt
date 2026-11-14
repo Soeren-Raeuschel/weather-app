@@ -1,6 +1,5 @@
 package com.example.weatherapp.data.local
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -8,17 +7,21 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "favorites", indices = [Index(value = ["name"], unique = true)])
 data class FavoriteEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(collate = ColumnInfo.NOCASE) val name: String,
+    val name: String,
     val temp: Double,
     val humidity: Int,
     val speed: Double,
     val description: String,
     val icon: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val feelsLike: Double = 0.0,
+    val windDeg: Int = 0
 )
 
-// Damit die bestehende WeatherContent wiederverwendet werden kann
+// wandelt einen Favoriten in eine WeatherEntity um, damit
+// das Composable WeatherContent für Favoriten und aktuellen Standort wiederverwendet werden kann
 fun FavoriteEntity.toWeatherEntity() = WeatherEntity(
     name = name, temp = temp, humidity = humidity, speed = speed,
-    description = description, icon = icon, timestamp = timestamp
+    description = description, icon = icon, timestamp = timestamp,
+    feelsLike = feelsLike, windDeg = windDeg
 )

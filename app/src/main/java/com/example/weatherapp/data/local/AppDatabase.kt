@@ -1,16 +1,12 @@
-package com.example.weatherapp.di
+package com.example.weatherapp.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.weatherapp.data.local.FavoriteDao
-import com.example.weatherapp.data.local.WeatherDao
-import com.example.weatherapp.data.local.WeatherEntity
-import com.example.weatherapp.data.local.FavoriteEntity
 
 
 @Database(
     entities = [WeatherEntity::class, FavoriteEntity::class],
-    version = 2,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

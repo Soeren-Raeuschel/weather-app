@@ -1,44 +1,49 @@
 package com.example.weatherapp.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.weatherapp.ui.navbar.AppBottomBar
-import com.example.weatherapp.ui.navbar.Screen
-import com.example.weatherapp.ui.weather.WeatherScreen
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavHostController
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.weatherapp.ui.theme.WeatherAppTheme
-import com.example.weatherapp.ui.weather.WeatherContent
 import com.example.weatherapp.data.local.WeatherEntity
 import com.example.weatherapp.ui.favorites.FavoritesScreen
+import com.example.weatherapp.ui.navbar.AppBottomBar
+import com.example.weatherapp.ui.navbar.Screen
 import com.example.weatherapp.ui.settings.SettingsScreen
+import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.theme.WeatherBackground
+import com.example.weatherapp.ui.weather.WeatherContent
+import com.example.weatherapp.ui.weather.WeatherScreen
 
 @Composable
 fun MainScreen() {
+    // rememberNavController merkt sich den Controller über Neuzeichnen hinweg
     val navController = rememberNavController()
 
     MainScreenContent(navController = navController) {
+        // NavHost zeigt je nach aktueller Route den passenden Screen an
         NavHost(
             navController = navController,
-            startDestination = Screen.Weather.rout
+            startDestination = Screen.Weather.route // App startet auf dem Wetter-Tab
         ) {
-            composable(Screen.Weather.rout) { WeatherScreen() }
-            composable(Screen.Favorites.rout) { FavoritesScreen() }
-            composable(Screen.Settings.rout) { SettingsScreen() }
+            composable(Screen.Weather.route) { WeatherScreen() }
+            composable(Screen.Favorites.route) { FavoritesScreen() }
+            composable(Screen.Settings.route) { SettingsScreen() }
         }
     }
 }
@@ -49,17 +54,25 @@ fun MainScreenContent(
     navController: NavHostController,
     content: @Composable () -> Unit
 ) {
+    // Aktuelle Route, damit der Titel oben zum Screen passt
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
+        //Hintergrund; dunkle Schrift für Texte
+        containerColor = WeatherBackground,
+        contentColor = Color(0xFF14152B),
         bottomBar = { AppBottomBar(navController) },
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = getTitleForRoute(currentRoute)) }
+                title = { Text(text = getTitleForRoute(currentRoute)) },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         }
     ) { innerPadding ->
+        // innerPadding verhindert, dass der Inhalt unter den Bars verschwindet
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -72,6 +85,7 @@ fun MainScreenContent(
     }
 }
 
+// Übersetzt die Route in den deutschen Titel für die Top-Bar
 fun getTitleForRoute(route: String?): String {
     return when (route) {
         "weather" -> "Wetter"
@@ -81,6 +95,8 @@ fun getTitleForRoute(route: String?): String {
     }
 }
 
+
+// Vorschau mit festen Beispieldaten
 @Preview(showBackground = true, name = "MainScreen")
 @Composable
 fun MainScreenPreview() {
@@ -88,7 +104,6 @@ fun MainScreenPreview() {
         MainScreenContent(navController = rememberNavController()) {
             WeatherContent(
                 weather = WeatherEntity(
-                    // Felder an deine Entity anpassen
                     name = "Kassel",
                     description = "Leicht bewölkt",
                     temp = 18.5,
